@@ -9,8 +9,56 @@ using namespace std;
 
 const int MAX_N = 100;
 
+class vec3{
+public:
+    float x,y,z;
+    vec3(float _x, float _y, float _z){
+        x = _x; y = _y; z = _z;
+    }
+    vec3 operator+(vec3& b){
+        return vec3(x+b.x, y+b.y, z+b.z);
+    }
+};
+
+class Camera{
+    public:
+    float offsetx;
+    float offsety;
+    float originx;
+    float originy;
+    float focus; 
+    Camera(){
+        offsetx = offsety = 0.0; focus = 10.0;
+        originx = 0.0;
+        originy = 700.0;
+    }
+    Vector2f transform(vec3 o){
+        float x,y,z;
+        x = o.x; y = o.y; z = o.z;
+        x-=offsetx;
+        y-=offsety;
+        x*=focus; y*=focus; z*=focus;
+        return Vector2f(originx+x+y,originy-0.5*y+z);
+    }
+
+    void drawQuad(vec3 o, vec3 a, vec3 b, Color color, RenderWindow &window){
+        VertexArray quad(PrimitiveType::TriangleStrip, 4);
+        quad[0].position = transform(o);
+        quad[1].position = transform(o+a);
+        quad[2].position = transform(o+b);
+        quad[3].position = transform(o+a+b);
+        quad[0].color = quad[1].color = quad[2].color = quad[3].color = color;
+        window.draw(quad);
+    }
+
+
+
+
+};
+
 class Game{
     public:
+    Camera camera;
     Color tileColor[MAX_N][MAX_N];
     bool dragState;
     Vector2i first_click;
@@ -26,7 +74,7 @@ class Game{
     void drawScene(RenderWindow &window){
         for(int i = 0; i < MAX_N; i++){
             for(int j = 0; j < MAX_N; j++){
-                VertexArray quad(PrimitiveType::TriangleStrip, 4);
+               /* VertexArray quad(PrimitiveType::TriangleStrip, 4);
                 quad[0].position = Vector2f(5.0*i    , 5.0*j    );
                 quad[1].position = Vector2f(5.0*i+5.0, 5.0*j    );
                 quad[2].position = Vector2f(5.0*i    , 5.0*j+5.0);
@@ -35,7 +83,9 @@ class Game{
                 quad[1].color = tileColor[i][j];
                 quad[2].color = tileColor[i][j];
                 quad[3].color = tileColor[i][j];
-                window.draw(quad);
+                window.draw(quad);*/
+                camera.drawQuad(vec3(i*1.0,j*1.0,0.0),vec3(1.0,0.0,0.0),vec3(0.0,1.0,0.0),tileColor[i][j],window);
+
             }
         }
         if(dragState){
@@ -71,9 +121,9 @@ class Game{
 int main(){
 
 
-    RenderWindow window(VideoMode({800,600}),"Okno",Style::Close);
+    RenderWindow window(VideoMode({1200,900}),"Okno",Style::Close);
     RenderTexture offscene; 
-    offscene.create(800,600);
+    offscene.create(1200,900);
     window.setFramerateLimit(60);
 
     Game* gra = new Game(); 
