@@ -1,87 +1,82 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <iostream>
+#include <math.h>
 using namespace sf;
+using namespace std;
 
 
-struct vec3{
-    float x,y,z;
-    vec3(float _x, float _y, float _z){
-        x = _x; y = _y; z = _z;
+
+const int MAX_N = 100;
+
+class Game{
+    public:
+    Color tileColor[MAX_N][MAX_N];
+    bool dragState;
+    Vector2i first_click;
+
+    Game(){
+        for(int i = 0; i < MAX_N; i++){
+            for(int j = 0; j < MAX_N; j++){
+                tileColor[i][j] = Color(rand()%255,rand()%255,rand()%255,100);
+            }
+        }
+        dragState = false;
     }
-    vec3 operator+(vec3& b){
-        return vec3(x+b.x, y+b.y, z+b.z);
+    void drawScene(RenderWindow &window){
+        for(int i = 0; i < MAX_N; i++){
+            for(int j = 0; j < MAX_N; j++){
+                VertexArray quad(PrimitiveType::TriangleStrip, 4);
+                quad[0].position = Vector2f(5.0*i    , 5.0*j    );
+                quad[1].position = Vector2f(5.0*i+5.0, 5.0*j    );
+                quad[2].position = Vector2f(5.0*i    , 5.0*j+5.0);
+                quad[3].position = Vector2f(5.0*i+5.0, 5.0*j+5.0);
+                quad[0].color = tileColor[i][j];
+                quad[1].color = tileColor[i][j];
+                quad[2].color = tileColor[i][j];
+                quad[3].color = tileColor[i][j];
+                window.draw(quad);
+            }
+        }
+        if(dragState){
+
+            VertexArray quad(PrimitiveType::TriangleStrip, 4);
+            Vector2i second_click = Mouse::getPosition(window);
+            //std::cout<<first_click.x<<","<<first_click.y<<","<<second_click.x<<","<<second_click.y<<"\n";
+            quad[0].position = Vector2f(first_click.x*1.0  ,  first_click.y *1.0);
+            quad[1].position = Vector2f(second_click.x*1.0 , first_click.y*1.0 );
+            quad[2].position = Vector2f(first_click.x *1.0 , second_click.y*1.0);
+            quad[3].position = Vector2f(second_click.x *1.0 ,  second_click.y*1.0);
+            quad[0].color = quad[1].color = quad[2].color = quad[3].color = Color(0,0,255,125);
+            window.draw(quad);
+
+        }
     }
-    vec3 operator-(vec3& b){
-        return vec3(x-b.x, y-b.y, z-b.z);
+    void endDrag(Event &event){
+        Vector2i second_click(event.mouseButton.x,event.mouseButton.y);
+        for(int i = max(0,min(first_click.x,second_click.x)/5); i <= min(MAX_N-1, max(first_click.x,second_click.x)/5); i++){
+            for(int j = max(0,min(first_click.y,second_click.y)/5); j <= min(MAX_N-1, max(first_click.y,second_click.y)/5); j++){
+                tileColor[i][j] = Color(0,0,80,125);
+
+            }
+        }
+
+
     }
 
 };
 
-vec3 operator*(float f, vec3& a){
-    return vec3(f*a.x,f*a.y,f*a.z);
-}
 
-struct color{
-    float r,g,b,a;
-    color(float _r, float _g, float _b){
-        r = _r; g = _g; b = _b; a = 1.f;
-    }
-};
-
-
-void drawTriangle(vec3 origin, vec3 first, vec3 second, color color){
-    glBegin(GL_TRIANGLES);
-    auto makeVertex = [&](vec3 a){glVertex3f(a.x,a.y,a.z);};
-    glColor3f(color.r,color.g,color.b);
-    makeVertex(origin);
-    makeVertex(origin+first);
-    makeVertex(origin+second);
-    glEnd();
-}
-
-void drawParallelogram(vec3 origin, vec3 first, vec3 second, color color){
-          drawTriangle(origin, first, second,color);
-          drawTriangle(origin+first+second, (-1.0)*first, (-1.0)*second,color);
-}
 
 int main(){
 
-    //obrzydliwe
-    int mousex = 0;
-    int mousey = 0;
 
-
-    //
-
-
-    Window window(VideoMode({600,800}),"Okno",Style::Default);
-    window.setVerticalSyncEnabled(true);
-
-    const GLubyte* version = glGetString(GL_VERSION);
-    const GLubyte* renderer = glGetString(GL_RENDERER);
-    const GLubyte* vendor   = glGetString(GL_VENDOR);
-    const GLubyte* glsl     = glGetString(GL_SHADING_LANGUAGE_VERSION);
-
-    std::cout << "OpenGL Version: " << version << "\n";
-    std::cout << "Renderer: " << renderer << "\n";
-    std::cout << "Vendor: " << vendor << "\n";
-    std::cout << "GLSL Version: " << glsl << "\n";
-
-
+    RenderWindow window(VideoMode({800,600}),"Okno",Style::Close);
+    RenderTexture offscene; 
+    offscene.create(800,600);
     window.setFramerateLimit(60);
 
-    glEnable(GL_DEPTH_TEST);
-
-    glViewport(0, 0, 800, 600);
-
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-1.0, 1.0, -0.75, 0.75, 1.0, 100.0); 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
+    Game* gra = new Game(); 
 
     while(window.isOpen()){
         Event event;
@@ -90,28 +85,33 @@ int main(){
                 window.close();
             }
             if(event.type == Event::KeyPressed){
-                std::cout<<"Pressed: "<<event.key.code<<"\n";
+                //std::cout<<"Pressed: "<<event.key.code<<"\n";
             }
             if(event.type == Event::KeyReleased){
-                std::cout<<"Released: "<<event.key.code<<"\n";
+                //std::cout<<"Released: "<<event.key.code<<"\n";
             }
             if(event.type == Event::MouseMoved){
-                std::cout<<"MouseMoved: "<<event.mouseMove.x<<","<<event.mouseMove.y<<"\n";
-                mousex = event.mouseMove.x;
-                mousey = event.mouseMove.y;
+                //std::cout<<"MouseMoved: "<<event.mouseMove.x<<","<<event.mouseMove.y<<"\n";
+                int x = event.mouseMove.x;
+                int y = event.mouseMove.y;
+                if(x >= 0 && y >= 0 && x < 500 && y < 500){
+                    gra->tileColor[x/5][y/5] = Color(rand()%255,0,0);
+                }
+            }
+            if(event.type == Event::MouseButtonPressed){
+                gra->dragState = true;
+                gra->first_click = Vector2i(event.mouseButton.x,event.mouseButton.y);
+                std::cout<<"Event::MouseButtonPressed\n";
+            }
+            if(event.type == Event::MouseButtonReleased){
+                gra->dragState = false;
+                gra->endDrag(event);
             }
         }
-        glClearColor(0.13f, 0.23f, 0.45f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        vec3 a(1.0,1.0,1.0);
-        vec3 b(10.0,0.0,0.0);
-        vec3 c(0.0,10.0,0.0);
-        color red(1.0,0.0,0.0);
-        drawParallelogram(a,b,c,red);
-
-
-
-        //window.clear(Color::White);
+        static float f = 0.0;
+        f+=0.01;
+        window.clear(Color(100+100*sin(f),100,180));
+        gra->drawScene(window);
         window.display();
     }
 }

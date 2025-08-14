@@ -1,2 +1,2 @@
-g++ main.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system -lGL
+g++ main.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system -lGL -fsanitize=address -fno-omit-frame-pointer -g
 ./main
