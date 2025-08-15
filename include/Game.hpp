@@ -8,6 +8,8 @@ using namespace std;
 class Game{
     public:
     vector<Building*> buildingList;
+    float pop;
+    float content;
     Camera camera;
     Color tileColor[MAX_N][MAX_N];
     Building* tileBuilding[MAX_N][MAX_N];

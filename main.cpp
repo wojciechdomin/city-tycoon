@@ -16,7 +16,7 @@ using namespace std;
 
 int main(){
 
-
+    srand(time(NULL));
     RenderWindow window(VideoMode({1200,900}),"Okno",Style::Close);
     RenderTexture offscreen; 
     offscreen.create(1200,900);
@@ -51,7 +51,7 @@ int main(){
             }
             if(event.type == Event::MouseMoved){
                 Color picked = img.getPixel(event.mouseMove.x,event.mouseMove.y);
-                std::cout<<(int)picked.r<<","<<(int)picked.g<<","<<(int)picked.b<<","<<(int)picked.a<<"\n";
+                //std::cout<<(int)picked.r<<","<<(int)picked.g<<","<<(int)picked.b<<","<<(int)picked.a<<"\n";
                 //std::cout<<"MouseMoved: "<<event.mouseMove.x<<","<<event.mouseMove.y<<"\n";
                 //int x = event.mouseMove.x;
                 //int y = event.mouseMove.y;

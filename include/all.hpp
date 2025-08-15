@@ -9,6 +9,7 @@ class Building;
 
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <vector>
 #include <iostream>
 #include <math.h>
 #include "vec3.hpp"

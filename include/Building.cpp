@@ -6,10 +6,34 @@ using namespace std;
 Building::Building(int _x, int _y, Game* gra){
     static int _id = 0;
     _id++; id = _id;
+    gra->buildingList.push_back(this);
     x = _x; y = _y;
-    sizex = 2; sizey = 3; sizez = 5;
+    sizex = 1+rand()%6; sizey = 1+rand()%6; sizez = 1+rand()%12;
     color = Color(255,255,255,255);
     type = BuildingType::road;
+    exists = true;
+    for(int i = max(0,x); i < min(x+sizex, MAX_N); i++){
+        for(int j = max(0,y); j < min(y+sizey,MAX_N); j++){
+            if(gra->tileBuilding[i][j]!=nullptr) return;
+        }
+    }
+    for(int i = max(0,x); i < min(x+sizex, MAX_N); i++){
+        for(int j = max(0,y); j < min(y+sizey,MAX_N); j++){
+            gra->tileBuilding[i][j] = this;
+        }
+    }
+}
+
+Building::~Building(){
+    for(int i = max(0,x); i < min(x+sizex, MAX_N); i++){
+        for(int j = max(0,y); j < min(y+sizey,MAX_N); j++){
+            gra->tileBuilding[i][j] = nullptr;
+        }
+    }
+    exists = false;
+
+
+
 }
 
 void Building::drawBuilding(Camera& camera, RenderWindow& window, RenderTexture& offscreen){

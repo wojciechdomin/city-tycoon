@@ -4,6 +4,7 @@ Camera::Camera(){
     offsetx = offsety = 0.0; focus = 30.0;
     originx = 0.0;
     originy = 700.0;
+    testTexture.loadFromFile("test.jpg");
 }
 
 Vector2f Camera::transform(vec3 o){
@@ -29,8 +30,15 @@ void Camera::drawQuad(vec3 o, vec3 a, vec3 b, Color color, RenderWindow &window)
     quad[1].position = transform(o+a);
     quad[2].position = transform(o+b);
     quad[3].position = transform(o+a+b);
+    quad[0].texCoords = Vector2f(753.0,0.0);
+    quad[1].texCoords = Vector2f(753.0,503.0);
+    quad[2].texCoords = Vector2f(0.0,0.0);
+    quad[3].texCoords = Vector2f(0.0,503.0);
+    
+
+
     quad[0].color = quad[1].color = quad[2].color = quad[3].color = color;
-    window.draw(quad);
+    window.draw(quad,&testTexture);
 }
 void Camera::drawQuadOffscreen(vec3 o, vec3 a, vec3 b, unsigned int id, RenderTexture &offscren){
     VertexArray quad(PrimitiveType::TriangleStrip, 4);

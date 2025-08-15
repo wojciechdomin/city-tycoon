@@ -5,6 +5,7 @@ using namespace std;
 
 class Camera{
     public:
+    Texture testTexture;
     float offsetx;
     float offsety;
     float originx;

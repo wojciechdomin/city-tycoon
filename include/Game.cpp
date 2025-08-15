@@ -3,6 +3,7 @@ using namespace sf;
 using namespace std;
 
 Game::Game(){
+    buildingList.push_back(nullptr);
     for(int i = 0; i < MAX_N; i++){
         for(int j = 0; j < MAX_N; j++){
         	if(rand()%3 == 0){
@@ -25,7 +26,7 @@ void Game::onTick(){
 	tickCounter++;
 	if(tickCounter%10 == 0){
 		int x = rand()%MAX_N; int y = rand()%MAX_N;
-		tileBuilding[x][y] = new Building(x,y,this);
+		new Building(x,y,this);
 	}
 
 
@@ -65,9 +66,10 @@ void Game::drawScene(RenderWindow &window, RenderTexture &offscreen){
         window.draw(quad);
 
     }
-    for(int i = 0; i < MAX_N; i++){
-    	for(int j = 0; j < MAX_N; j++){
-    		if(tileBuilding[i][j]!=nullptr){
+    
+	for(int j = MAX_N-1; j >= 0; j--){
+        for(int i = 0; i < MAX_N; i++){
+    		if(tileBuilding[i][j]!=nullptr && tileBuilding[i][j]->x == i && tileBuilding[i][j]->y == j){
     			tileBuilding[i][j]->drawBuilding(camera,window,offscreen);
     		}
     	}
