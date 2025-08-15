@@ -6,10 +6,28 @@ Game::Game(){
     for(int i = 0; i < MAX_N; i++){
         for(int j = 0; j < MAX_N; j++){
             tileColor[i][j] = Color(rand()%255,rand()%255,rand()%255,100);
+            tileBuilding[i][j] = nullptr;
         }
     }
     dragState = false;
 }
+
+
+void Game::onTick(){
+	static int tickCounter = 0;
+	tickCounter++;
+	if(tickCounter%100 == 0){
+		int x = rand()%MAX_N; int y = rand()%MAX_N;
+		tileBuilding[x][y] = new Building(x,y);
+	}
+
+
+
+
+
+}
+
+
 void Game::drawScene(RenderWindow &window){
     for(int i = 0; i < MAX_N; i++){
         for(int j = 0; j < MAX_N; j++){
@@ -39,6 +57,13 @@ void Game::drawScene(RenderWindow &window){
         quad[0].color = quad[1].color = quad[2].color = quad[3].color = Color(0,0,255,125);
         window.draw(quad);
 
+    }
+    for(int i = 0; i < MAX_N; i++){
+    	for(int j = 0; j < MAX_N; j++){
+    		if(tileBuilding[i][j]!=nullptr){
+    			tileBuilding[i][j]->drawBuilding(camera,window);
+    		}
+    	}
     }
 }
 void Game::endDrag(Event &event){

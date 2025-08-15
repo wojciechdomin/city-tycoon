@@ -14,5 +14,6 @@ class Building{
     Color color;
     BuildingType type;
     Building(int _x, int _y);
+    void drawBuilding(Camera& camera,RenderWindow &window);
 
 };

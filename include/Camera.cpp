@@ -1,7 +1,7 @@
 #include "all.hpp"
 
 Camera::Camera(){
-    offsetx = offsety = 0.0; focus = 10.0;
+    offsetx = offsety = 0.0; focus = 50.0;
     originx = 0.0;
     originy = 700.0;
 }
@@ -12,7 +12,7 @@ Vector2f Camera::transform(vec3 o){
     x-=offsetx;
     y-=offsety;
     x*=focus; y*=focus; z*=focus;
-    return Vector2f(originx+x+y,originy-0.5*y+z);
+    return Vector2f(originx+x+y,originy-0.5*y-z);
 }
 
 vec3 Camera::transformBack(Vector2f r){

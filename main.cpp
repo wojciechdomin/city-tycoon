@@ -50,11 +50,9 @@ int main(){
             }
             if(event.type == Event::MouseMoved){
                 //std::cout<<"MouseMoved: "<<event.mouseMove.x<<","<<event.mouseMove.y<<"\n";
-                int x = event.mouseMove.x;
-                int y = event.mouseMove.y;
-                if(x >= 0 && y >= 0 && x < 500 && y < 500){
-                    gra.tileColor[x/5][y/5] = Color(rand()%255,0,0);
-                }
+                //int x = event.mouseMove.x;
+                //int y = event.mouseMove.y;
+               
             }
             if(event.type == Event::MouseButtonPressed){
                 gra.dragState = true;
@@ -69,6 +67,7 @@ int main(){
         static float f = 0.0;
         f+=0.01;
         window.clear(Color(100+100*sin(f),100,180));
+        gra.onTick();
         gra.drawScene(window);
         window.display();
     }

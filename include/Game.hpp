@@ -13,6 +13,7 @@ class Game{
     bool dragState;
     vec3 first_click;
     Game();
+    void onTick();
     void drawScene(RenderWindow &window);
     void endDrag(Event &event);
 
