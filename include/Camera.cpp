@@ -39,6 +39,6 @@ void Camera::drawQuadOffscreen(vec3 o, vec3 a, vec3 b, unsigned int id, RenderTe
     quad[2].position = transform(o+b);
     quad[3].position = transform(o+a+b);
     quad[0].color = quad[1].color = quad[2].color = quad[3].color =
-    Color((id&0xff000000)>>24,(id&0x00ff0000)>>16,(id&0x0000ff00)>>8,(id&0x000000ff));
+    Color((id&0x00ff0000)>>16,(id&0x0000ff00)>>8,(id&0x000000ff),255);
     offscren.draw(quad);
 }

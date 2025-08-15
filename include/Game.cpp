@@ -23,9 +23,9 @@ Game::Game(){
 void Game::onTick(){
 	static int tickCounter = 0;
 	tickCounter++;
-	if(tickCounter%100 == 0){
+	if(tickCounter%10 == 0){
 		int x = rand()%MAX_N; int y = rand()%MAX_N;
-		tileBuilding[x][y] = new Building(x,y);
+		tileBuilding[x][y] = new Building(x,y,this);
 	}
 
 
