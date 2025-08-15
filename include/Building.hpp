@@ -9,11 +9,11 @@ class Building{
         road = 0,
         house = 1
     };
-    int x,y;
+    int x,y; int id;
     int sizex,sizey,sizez;
     Color color;
     BuildingType type;
     Building(int _x, int _y);
-    void drawBuilding(Camera& camera,RenderWindow &window);
+    void drawBuilding(Camera& camera, RenderWindow& window, RenderTexture& offscreen);
 
 };

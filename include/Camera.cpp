@@ -1,7 +1,7 @@
 #include "all.hpp"
 
 Camera::Camera(){
-    offsetx = offsety = 0.0; focus = 50.0;
+    offsetx = offsety = 0.0; focus = 30.0;
     originx = 0.0;
     originy = 700.0;
 }
@@ -31,4 +31,14 @@ void Camera::drawQuad(vec3 o, vec3 a, vec3 b, Color color, RenderWindow &window)
     quad[3].position = transform(o+a+b);
     quad[0].color = quad[1].color = quad[2].color = quad[3].color = color;
     window.draw(quad);
+}
+void Camera::drawQuadOffscreen(vec3 o, vec3 a, vec3 b, unsigned int id, RenderTexture &offscren){
+    VertexArray quad(PrimitiveType::TriangleStrip, 4);
+    quad[0].position = transform(o);
+    quad[1].position = transform(o+a);
+    quad[2].position = transform(o+b);
+    quad[3].position = transform(o+a+b);
+    quad[0].color = quad[1].color = quad[2].color = quad[3].color =
+    Color((id&0xff000000)>>24,(id&0x00ff0000)>>16,(id&0x0000ff00)>>8,(id&0x000000ff));
+    offscren.draw(quad);
 }

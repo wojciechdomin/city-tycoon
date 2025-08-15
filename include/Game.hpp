@@ -14,7 +14,7 @@ class Game{
     vec3 first_click;
     Game();
     void onTick();
-    void drawScene(RenderWindow &window);
+    void drawScene(RenderWindow &window, RenderTexture &offscreen);
     void endDrag(Event &event);
 
 };

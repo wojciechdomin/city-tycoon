@@ -5,7 +5,14 @@ using namespace std;
 Game::Game(){
     for(int i = 0; i < MAX_N; i++){
         for(int j = 0; j < MAX_N; j++){
-            tileColor[i][j] = Color(rand()%255,rand()%255,rand()%255,100);
+        	if(rand()%3 == 0){
+        		tileColor[i][j] = Color(30,240,20,200);	
+        	}else if(rand()%3 ==1){
+        		tileColor[i][j] = Color(60,180,40,200);	
+        	}else{
+        		tileColor[i][j] = Color(120,180,80,200);	
+        	}
+            
             tileBuilding[i][j] = nullptr;
         }
     }
@@ -28,7 +35,7 @@ void Game::onTick(){
 }
 
 
-void Game::drawScene(RenderWindow &window){
+void Game::drawScene(RenderWindow &window, RenderTexture &offscreen){
     for(int i = 0; i < MAX_N; i++){
         for(int j = 0; j < MAX_N; j++){
            /* VertexArray quad(PrimitiveType::TriangleStrip, 4);
@@ -61,7 +68,7 @@ void Game::drawScene(RenderWindow &window){
     for(int i = 0; i < MAX_N; i++){
     	for(int j = 0; j < MAX_N; j++){
     		if(tileBuilding[i][j]!=nullptr){
-    			tileBuilding[i][j]->drawBuilding(camera,window);
+    			tileBuilding[i][j]->drawBuilding(camera,window,offscreen);
     		}
     	}
     }

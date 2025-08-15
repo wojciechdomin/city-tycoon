@@ -17,6 +17,7 @@ class Camera{
     //now implement off-screen color picking...
 
     void drawQuad(vec3 o, vec3 a, vec3 b, Color color, RenderWindow &window);
+    void drawQuadOffscreen(vec3 o, vec3 a, vec3 b, unsigned int id, RenderTexture &offscren);
 
 
 
