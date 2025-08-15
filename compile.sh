@@ -1,2 +1,2 @@
-g++ main.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system -lGL -fsanitize=address -fno-omit-frame-pointer -g
+g++ main.cpp include/Camera.cpp include/Game.cpp include/Building.cpp include/vec3.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system -lGL -fsanitize=address -fno-omit-frame-pointer -g
 ./main
